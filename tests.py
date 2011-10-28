@@ -38,7 +38,7 @@ class TestUsers(unittest.TestCase):
         self.assertEqual(new_users_list, new_users)
 
     def test_get_user(self):
-        user = robot.get_user(self.new_users_file)
+        user = robot.get_user(self.new_users_file, self.old_users_file)
         new_users = map(rstrip, self.new_users)
         self.assertIn(user, new_users)
 

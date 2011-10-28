@@ -64,20 +64,9 @@ def main():
 
     auth = (settings.username, settings.password)
 
-    old_users_file = args.old_users
-    old_users = load_user_list(old_users_file)
-
-    users = args.users
-    new_users = load_user_list(users)
-    user = get_user(users)
-
-    #XXX: Potential deal breaker in here!
-    count = 0
-    while user in old_users:
-        print "We've already done that user!"
-        user = get_user(users)
-        count = count + 1
-    if count > len(new_users):
+    user = get_user(users_file=args.users, old_users_file=args.old_users)
+    if user is None:
+        print "Looks like all of the users have been done! Exiting."
         return
 
     repos = 'https://api.github.com/users/' + user + '/repos'
@@ -139,11 +128,13 @@ def load_user_list(old_users):
     return old
 
 
-def get_user(users):
-    text_file = open(users, "r")
-    u = text_file.readlines()
-    text_file.close()
-    return choice(u).rstrip()
+def get_user(users_file, old_users_file):
+    old_users = load_user_list(old_users_file)
+    users = load_user_list(users_file)
+    for user in users:
+        if user not in old_users:
+            return user
+    return None
 
 
 def fork_repo(user, repo):
