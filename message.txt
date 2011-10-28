@@ -1,0 +1,18 @@
+Hi there!
+
+This is WhitespaceBot.
+I'm an [open-source](https://github.com/Gunio/LightWrite) robot that removes trailing white space in your code, and gives you a gitignore file if you didn't have one!
+
+Why whitespace? Whitespace is an eyesore for developers who use text editors with dark themes.
+It's not a huge deal, but it's a bit annoying if you use Vim in a terminal.
+Really, I'm just a proof of concept - GitHub's V3 API allows robots to automatically improve open source projects, and that's really cool.
+Hopefully, somebody, maybe you!, will fork me and make me even more useful.
+
+My owner is [funding a bounty](http://gun.io/open/12/add-security-flaw-fixing-features-to-whitespacebot) to anybody who can add security fixing features to me.
+
+I've only cleaned your most popular project, and I've added you to a list of users not to contact again, so you won't get any more pull requests from me unless you ask. If I'm misbehaving, please email my owner and tell him to turn me off! If this pull request is of no use to you, please just ignore it.
+
+
+Thanks!
+WhiteSpacebot from [Gun.io](http://gun.io).
+
