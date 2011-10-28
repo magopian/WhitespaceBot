@@ -1,0 +1,1 @@
+# default file used to store old users. Use another one with the -o option
