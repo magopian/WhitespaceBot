@@ -47,7 +47,7 @@ def main():
     while user in old_users:
         print "We've already done that user!"
         user = get_user(users)
-    count = count + 1
+        count = count + 1
     if count > len(new_users):
         return
 
