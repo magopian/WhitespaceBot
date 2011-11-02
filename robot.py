@@ -195,7 +195,7 @@ def fix_repo(repo):
             path = os.path.join(root, f)
 
             # gotta be a way more pythonic way of doing this
-            banned = ['.git', '.py', '.yaml', '.patch', '.hs', '.occ', '.md']
+            banned = ['.git', '.py', '.yaml', '.patch', '.hs', '.occ', '.md', '.markdown', '.mdown']
             cont = False
             for b in banned:
                 if b in path:
@@ -238,15 +238,45 @@ def fix_repo(repo):
             '*.o\n' + \
             '*.so\n' + \
             '*.pyc\n\n' + \
-            '# Logs and databases #\n' + \
-            '######################\n' + \
-            '*.log\n\n' + \
-            '# OS generated files #\n' + \
-            '######################\n' + \
-            '.DS_Store*\n' + \
-            'ehthumbs.db\n' + \
+            '# Numerous always-ignore extensions\n' + \
+            '###################\n' + \
+            '*.diff\n' + \
+            '*.err\n' + \
+            '*.orig\n' + \
+            '*.log\n' + \
+            '*.rej\n' + \
+            '*.swo\n' + \
+            '*.swp\n' + \
+            '*.vi\n' + \
+            '*~\n\n' + \
+            '*.sass-cache\n' + \
+            '# Folders to ignore\n' + \
+            '###################\n' + \
+            '.hg\n' + \
+            '.svn\n' + \
+            '.CVS\n' +
+            '# OS or Editor folders\n' + \
+            '###################\n' + \
+            '.DS_Store\n' + \
             'Icon?\n' + \
-            'Thumbs.db\n'
+            'Thumbs.db\n' + \
+            'ehthumbs.db\n' + \
+            'nbproject\n' + \
+            '.cache\n' + \
+            '.project\n' + \
+            '.settings\n' + \
+            '.tmproj\n' + \
+            '*.esproj\n' + \
+            '*.sublime-project\n' + \
+            '*.sublime-workspace\n' + \
+            '# Dreamweaver added files\n' + \
+            '###################\n' + \
+            '_notes\n' + \
+            'dwsync.xml\n' + \
+            '# Komodo\n' + \
+            '###################\n' + \
+            '*.komodoproject\n' + \
+            '.komodotools\n'
         ignorefile.write(ignore)
         ignorefile.close()
         try:
