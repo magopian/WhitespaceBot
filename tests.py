@@ -5,7 +5,6 @@ from __future__ import with_statement
 import unittest
 import robot
 from os import remove
-from string import rstrip
 
 
 class TestUsers(unittest.TestCase):
@@ -27,20 +26,21 @@ class TestUsers(unittest.TestCase):
         remove(self.old_users_file)
         remove(self.new_users_file)
 
-    def test_old_users_list(self):
+    def test_load_user_list(self):
         old_users_list = robot.load_user_list(self.old_users_file)
-        old_users = map(rstrip, self.old_users)
+        old_users = set([u.strip() for u in self.old_users])
         self.assertEqual(old_users_list, old_users)
-
-    def test_new_users_list(self):
-        new_users_list = robot.load_user_list(self.new_users_file)
-        new_users = map(rstrip, self.new_users)
-        self.assertEqual(new_users_list, new_users)
 
     def test_get_user(self):
         user = robot.get_user(self.new_users_file, self.old_users_file)
-        new_users = map(rstrip, self.new_users)
+        new_users = [u.strip() for u in self.new_users]
         self.assertIn(user, new_users)
+
+    def test_get_user_fail(self):
+        with open(self.old_users_file, 'a') as f:
+            f.write('mat\n')
+        user = robot.get_user(self.new_users_file, self.old_users_file)
+        self.assertEqual(user, None)
 
     def test_save_user(self):
         robot.save_user(self.old_users_file, 'mat')

@@ -10,7 +10,6 @@ It also gives you a .gitignore if you didn't have one already.
 """
 
 from __future__ import with_statement
-from random import choice
 import argparse
 import json
 import os
@@ -69,83 +68,84 @@ def main():
         print "Looks like all of the users have been done! Exiting."
         return
 
-    repos = 'https://api.github.com/users/' + user + '/repos'
-    r = requests.get(repos, auth=auth)
+    repos = 'https://api.github.com/users/%s/repos' % user
+    r = requests.get(repos)
 
-    if (r.status_code == 200):
+    if r.status_code == 200:
         resp = simplejson.loads(r.content)
-        topwatch = 0
-        top_repo = ''
-        for repo in resp:
-            if repo['watchers'] > topwatch:
-                top_repo = repo['name']
-                topwatch = repo['watchers']
-        print dir(repo)
+        # repositories, ordered by descending watchers
+        repositories = sorted([(r['watchers'], r['name']) for r in resp],
+                              reverse=True)
+        watchers, repo = repositories[0]
 
         print "%s's most watched repo is %s with %s watchers. Forking" % (
                 user,
-                top_repo,
-                str(topwatch))
+                repo,
+                watchers)
 
-        repo = top_repo
-        print "GitHub Forking.."
+        print "GitHub Forking..."
         clone_url = fork_repo(user, repo)
-        print "Waiting.."
+        print "Waiting..."
         time.sleep(30)
-        print "Cloning.."
+        print "Cloning..."
         if not clone_repo(clone_url):
             return
-        print "Changing branch.."
+        print "Changing branch..."
         branched = change_branch(repo)
-        print "Fixing repo.."
+        print "Fixing repo..."
         fixed = fix_repo(repo)
-        print "Comitting.."
+        print "Comitting..."
         commited = commit_repo(repo)
-        print "Pushing.."
+        print "Pushing..."
         pushed = push_commit(repo)
-        print "Submitting pull request.."
+        print "Submitting pull request..."
         submitted = submit_pull_request(user, repo)
-        print "Delting local repo.."
+        print "Delting local repo..."
         deleted = delete_local_repo(repo)
-        print "Olding user.."
-        old = save_user(old_users_file, user)
+        print "Olding user..."
+        old = save_user(args.old_users, user)
+    else:
+        print "Error while requesting the repositories for %s, Exiting." % user
+        print "Status code: %s" % r.status_code
+        print "Error message: %s" % r.content
 
 
 def save_user(old_users_file, user):
+    """Save user as being already processed"""
     with open(old_users_file, "a") as f:
-        f.write(user + '\n')
+        f.write('%s\n' % user)
     return True
 
 
-def load_user_list(old_users):
-    text_file = open(old_users, "r")
-    old = text_file.readlines()
-    text_file.close()
-    x = 0
-    for hid in old:
-        old[x] = hid.rstrip()
-        x = x + 1
-    return old
+def load_user_list(users_file):
+    """Return a set of users loaded from a user file
+
+    User files must contain one user per line, whitespace will be striped.
+
+    """
+    with open(users_file, 'r') as f:
+        users = f.readlines()
+    return set([u.strip() for u in users])
 
 
 def get_user(users_file, old_users_file):
+    """Get the first user not already processed"""
     old_users = load_user_list(old_users_file)
     users = load_user_list(users_file)
-    for user in users:
-        if user not in old_users:
-            return user
-    return None
+    new_users = users.difference(old_users)
+    return new_users.pop() if new_users else None
 
 
 def fork_repo(user, repo):
-    url = 'https://api.github.com/repos/' + user + '/' + repo + '/forks'
+    """Fork the repository on GitHub"""
+    url = 'https://api.github.com/repos/%s/%s/forks' % (user, repo)
     auth = (settings.username, settings.password)
     r = requests.post(url, auth=auth)
-    if (r.status_code == 201):
+    if r.status_code == 201:
         resp = simplejson.loads(r.content)
         return resp['ssh_url']
     else:
-        return None
+        raise Exception("GitHub fork failed, please check credentials")
 
 
 def clone_repo(clone_url):
