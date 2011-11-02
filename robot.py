@@ -195,7 +195,15 @@ def fix_repo(repo):
             path = os.path.join(root, f)
 
             # gotta be a way more pythonic way of doing this
-            banned = ['.git', '.py', '.yaml', '.patch', '.hs', '.occ', '.md', '.markdown', '.mdown']
+            banned = ['.git',
+                      '.py',
+                      '.yaml',
+                      '.patch',
+                      '.hs',
+                      '.occ',
+                      '.md',
+                      '.markdown',
+                      '.mdown']
             cont = False
             for b in banned:
                 if b in path:
@@ -254,7 +262,7 @@ def fix_repo(repo):
             '###################\n' + \
             '.hg\n' + \
             '.svn\n' + \
-            '.CVS\n' +
+            '.CVS\n' + \
             '# OS or Editor folders\n' + \
             '###################\n' + \
             '.DS_Store\n' + \
